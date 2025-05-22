@@ -1,0 +1,25 @@
+{
+  "name": "mcp-opencage-server",
+  "version": "1.0.0",
+  "description": "MCP server for OpenCage geocoding API",
+  "type": "module",
+  "bin": {
+    "mcp-opencage-server": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc && chmod 755 build/index.js",
+    "dev": "tsc && node build/index.js",
+    "start": "node build/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "build"
+  ]
+}
