@@ -13,7 +13,7 @@ This server allows you to convert between addresses and geographic coordinates.
 ## Prerequisites
 
 1. **Node.js** (version 16 or higher)
-2. **OpenCage API Key**: Sign up at [OpenCage Data](https://opencagedata.com/) to get a free-trial geocoding API key
+2. **OpenCage API Key**: Sign up on [the OpenCage website](https://opencagedata.com/) to get a free-trial geocoding API key
 
 ## Installation
 
