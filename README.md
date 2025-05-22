@@ -3,8 +3,7 @@
 An MCP (Model Context Protocol) server that provides geocoding capabilities using the [OpenCage geocoding API](https://opencagedata.com/api).
 This server allows you to convert between addresses and geographic coordinates.
 
-
-**PLEASE NOTE:** the examples shown here are based on an integration with [claude.ai](https://claude.ai/)'s desktop client. MCP as a concept is supported by other services, but may require a slightly different configuration. 
+**PLEASE NOTE:** the examples shown here are based on an integration with [claude.ai](https://claude.ai/)'s desktop client. MCP as a concept is supported by other services, but may require a slightly different configuration.
 
 ## Features
 
@@ -24,6 +23,8 @@ This server allows you to convert between addresses and geographic coordinates.
 ```bash
 
 git clone git@github.com:OpenCageData/opencage-geocoding-mcp.git
+# or
+git clone https://github.com/OpenCageData/opencage-geocoding-mcp.git
 
 cd opencage-geocoding-mcp
 ```
@@ -50,7 +51,7 @@ npm run build
 
 ### Using within Claude Desktop
 
-Add this configuration to your Claude Desktop config file 
+Add this configuration to your Claude Desktop config file
 
 On a Mac the config file should be (`~/Library/Application Support/Claude/claude_desktop_config.json`), but you can also navigate to the file via the menu: `Settings > Developer > Edit Config`
 
@@ -68,13 +69,11 @@ On a Mac the config file should be (`~/Library/Application Support/Claude/claude
 }
 ```
 
-
 ## Available Tools
 
-Note: the first time you run a command you will need to give Claude permission 
+Note: the first time you run a command you will need to give Claude permission
 
 ![Allow external integration](allow-external-integration.png)
-
 
 ### 1. geocode-forward
 
@@ -114,7 +113,7 @@ Input: 38.8976, -77.0365
 Result: "1600 Pennsylvania Avenue NW, Washington, DC 20500, United States of America"
 ```
 
-### 3. get-api-status
+### 3. get-opencage-info
 
 Check your current API usage and rate limits.
 **NOTE**: subscription customers do NOT have hard usage limits. See [relevant documentation](https://opencagedata.com/api#rate-limiting).
