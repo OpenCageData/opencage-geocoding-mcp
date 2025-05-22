@@ -2,6 +2,10 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { 
+  ListPromptsRequestSchema, 
+  GetPromptRequestSchema 
+} from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 
 // OpenCage API Configuration
