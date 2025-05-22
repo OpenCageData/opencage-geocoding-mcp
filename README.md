@@ -49,7 +49,10 @@ npm run dev
 
 ### Using with Claude Desktop
 
-Add this configuration to your Claude Desktop config file (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+Add this configuration to your Claude Desktop config file 
+
+On a Mac this will be (`~/Library/Application Support/Claude/claude_desktop_config.json`)
+but you can also navigate to the file via the menu: Settings > Developer > Edit Config
 
 ```json
 {
@@ -64,6 +67,11 @@ Add this configuration to your Claude Desktop config file (`~/Library/Applicatio
   }
 }
 ```
+
+Note: the first time you run a command you will need to give Claude permission 
+
+![Allow external integration](allow-external-integration.png)
+
 
 ## Available Tools
 
