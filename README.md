@@ -56,7 +56,7 @@ Add this configuration to your Claude Desktop config file (`~/Library/Applicatio
   "mcpServers": {
     "opencage-geocoding": {
       "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/YOUR/PROJECT/build/index.js"],
+      "args": ["/ABSOLUTE/PATH/TO/opencage-geocoding-mcp/build/index.js"],
       "env": {
         "OPENCAGE_API_KEY": "your_opencage_geocoding_api_key_here"
       }
