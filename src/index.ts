@@ -31,7 +31,7 @@ const server = new McpServer({
 // Helper function for making OpenCage API requests
 async function makeOpenCageRequest(endpoint: string, params: Record<string, string>): Promise<any> {
   const url = new URL(endpoint, OPENCAGE_API_BASE);
-  url.searchParams.append("key", API_KEY);
+  url.searchParams.append("key", OPENCAGE_API_KEY);
   
   Object.entries(params).forEach(([key, value]) => {
     url.searchParams.append(key, value);
@@ -40,7 +40,7 @@ async function makeOpenCageRequest(endpoint: string, params: Record<string, stri
   try {
     const response = await fetch(url.toString());
     if (!response.ok) {
-      throw new Error(`OpenCage API error: ${response.status} ${response.statusText}`);
+      throw new Error(`OpenCage geocoding API error: ${response.status} ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
@@ -192,7 +192,7 @@ server.tool(
   async () => {
     try {
       // Make a minimal request to get rate limit headers
-      const response = await fetch(`${OPENCAGE_API_BASE}/json?key=${API_KEY}&q=0,0&limit=1`);
+      const response = await fetch(`${OPENCAGE_API_BASE}/json?key=${OPENCAGE_API_KEY}&q=0,0&limit=1`);
       
       const headers = response.headers;
       const remaining = headers.get('x-ratelimit-remaining');
