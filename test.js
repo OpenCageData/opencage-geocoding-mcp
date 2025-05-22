@@ -3,6 +3,9 @@
 // Simple test script to verify the OpenCage API connection
 // Run with: node test.js
 
+// Import fetch for Node.js versions that don't have it built-in
+import fetch from 'node-fetch';
+
 const API_KEY = process.env.OPENCAGE_API_KEY;
 
 if (!API_KEY) {

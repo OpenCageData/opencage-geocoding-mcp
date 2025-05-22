@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { 
+  ListToolsRequestSchema,
+  CallToolRequestSchema,
   ListPromptsRequestSchema, 
   GetPromptRequestSchema 
 } from "@modelcontextprotocol/sdk/types.js";
-import { z } from "zod";
+import fetch from 'node-fetch';
 
 // OpenCage API Configuration
 const OPENCAGE_API_BASE = "https://api.opencagedata.com/geocode/v1";
@@ -18,20 +20,21 @@ if (!API_KEY) {
 }
 
 // Create server instance
-const server = new McpServer({
+const server = new Server({
   name: "opencage-geocoding",
-  version: "1.0.0",
+  version: "1.0.0"
+}, {
   capabilities: {
     resources: {},
     tools: {},
     prompts: {}
-  },
+  }
 });
 
 // Helper function for making OpenCage API requests
 async function makeOpenCageRequest(endpoint: string, params: Record<string, string>): Promise<any> {
   const url = new URL(endpoint, OPENCAGE_API_BASE);
-  url.searchParams.append("key", OPENCAGE_API_KEY);
+  url.searchParams.append("key", API_KEY!); // Use non-null assertion since we check above
   
   Object.entries(params).forEach(([key, value]) => {
     url.searchParams.append(key, value);
@@ -40,7 +43,7 @@ async function makeOpenCageRequest(endpoint: string, params: Record<string, stri
   try {
     const response = await fetch(url.toString());
     if (!response.ok) {
-      throw new Error(`OpenCage geocoding API error: ${response.status} ${response.statusText}`);
+      throw new Error(`OpenCage API error: ${response.status} ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
@@ -49,18 +52,91 @@ async function makeOpenCageRequest(endpoint: string, params: Record<string, stri
   }
 }
 
-// Tool: Forward Geocoding (address/place -> coordinates)
-server.tool(
-  "geocode-forward",
-  "Convert an address or place name to geographic coordinates (latitude/longitude)",
-  {
-    query: z.string().describe("The address, place name, or location to geocode"),
-    language: z.string().optional().describe("Language for results (e.g., 'en', 'de', 'fr')"),
-    countrycode: z.string().optional().describe("Restrict results to specific country (ISO 3166-1 alpha-2 code)"),
-    bounds: z.string().optional().describe("Bounding box to restrict results (min_lon,min_lat,max_lon,max_lat)"),
-    limit: z.number().min(1).max(100).optional().describe("Maximum number of results (1-100, default 10)")
-  },
-  async ({ query, language, countrycode, bounds, limit }) => {
+// List available tools
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+  return {
+    tools: [
+      {
+        name: "geocode-forward",
+        description: "Convert an address or place name to geographic coordinates (latitude/longitude)",
+        inputSchema: {
+          type: "object",
+          properties: {
+            query: {
+              type: "string",
+              description: "The address, place name, or location to geocode"
+            },
+            language: {
+              type: "string",
+              description: "Language for results (e.g., 'en', 'de', 'fr')"
+            },
+            countrycode: {
+              type: "string",
+              description: "Restrict results to specific country (ISO 3166-1 alpha-2 code)"
+            },
+            bounds: {
+              type: "string", 
+              description: "Bounding box to restrict results (min_lon,min_lat,max_lon,max_lat)"
+            },
+            limit: {
+              type: "number",
+              minimum: 1,
+              maximum: 100,
+              description: "Maximum number of results (1-100, default 10)"
+            }
+          },
+          required: ["query"]
+        }
+      },
+      {
+        name: "geocode-reverse",
+        description: "Convert geographic coordinates (latitude/longitude) to an address or place name",
+        inputSchema: {
+          type: "object",
+          properties: {
+            latitude: {
+              type: "number",
+              minimum: -90,
+              maximum: 90,
+              description: "Latitude coordinate"
+            },
+            longitude: {
+              type: "number", 
+              minimum: -180,
+              maximum: 180,
+              description: "Longitude coordinate"
+            },
+            language: {
+              type: "string",
+              description: "Language for results (e.g., 'en', 'de', 'fr')"
+            },
+            no_annotations: {
+              type: "boolean",
+              description: "Exclude additional metadata annotations"
+            }
+          },
+          required: ["latitude", "longitude"]
+        }
+      },
+      {
+        name: "get-api-status",
+        description: "Get current API usage and rate limit information for your OpenCage API key",
+        inputSchema: {
+          type: "object",
+          properties: {}
+        }
+      }
+    ]
+  };
+});
+
+// Handle tool calls
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  const { name, arguments: args } = request.params;
+  
+  if (name === "geocode-forward") {
+    const { query, language, countrycode, bounds, limit } = (args as any) || {};
+    
     try {
       const params: Record<string, string> = {
         q: query,
@@ -88,7 +164,7 @@ server.tool(
           content: [
             {
               type: "text",
-              text: `Found ${results.length} result(s) for "${query}":\n\n${results.map((r, i) => 
+              text: `Found ${results.length} result(s) for "${query}":\n\n${results.map((r: any, i: number) => 
                 `${i + 1}. ${r.formatted}\n   Coordinates: ${r.latitude}, ${r.longitude}\n   Confidence: ${r.confidence}/10`
               ).join('\n\n')}`
             }
@@ -116,19 +192,10 @@ server.tool(
       };
     }
   }
-);
-
-// Tool: Reverse Geocoding (coordinates -> address)
-server.tool(
-  "geocode-reverse",
-  "Convert geographic coordinates (latitude/longitude) to an address or place name",
-  {
-    latitude: z.number().min(-90).max(90).describe("Latitude coordinate"),
-    longitude: z.number().min(-180).max(180).describe("Longitude coordinate"),
-    language: z.string().optional().describe("Language for results (e.g., 'en', 'de', 'fr')"),
-    no_annotations: z.boolean().optional().describe("Exclude additional metadata annotations")
-  },
-  async ({ latitude, longitude, language, no_annotations }) => {
+  
+  if (name === "geocode-reverse") {
+    const { latitude, longitude, language, no_annotations } = (args as any) || {};
+    
     try {
       const params: Record<string, string> = {
         q: `${latitude},${longitude}`,
@@ -182,17 +249,11 @@ server.tool(
       };
     }
   }
-);
-
-// Tool: Get API Usage/Rate Limit Info
-server.tool(
-  "get-api-status",
-  "Get current API usage and rate limit information for your OpenCage API key",
-  {},
-  async () => {
+  
+  if (name === "get-api-status") {
     try {
       // Make a minimal request to get rate limit headers
-      const response = await fetch(`${OPENCAGE_API_BASE}/json?key=${OPENCAGE_API_KEY}&q=0,0&limit=1`);
+      const response = await fetch(`${OPENCAGE_API_BASE}/json?key=${API_KEY}&q=0,0&limit=1`);
       
       const headers = response.headers;
       const remaining = headers.get('x-ratelimit-remaining');
@@ -232,9 +293,11 @@ server.tool(
       };
     }
   }
-);
+  
+  throw new Error(`Unknown tool: ${name}`);
+});
 
-// Prompt: Geocoding Assistant
+// List available prompts
 server.setRequestHandler(ListPromptsRequestSchema, async () => {
   return {
     prompts: [
@@ -253,6 +316,7 @@ server.setRequestHandler(ListPromptsRequestSchema, async () => {
   };
 });
 
+// Handle prompt requests
 server.setRequestHandler(GetPromptRequestSchema, async (request) => {
   if (request.params.name === "geocoding-assistant") {
     const task = request.params.arguments?.task || "general geocoding";
