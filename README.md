@@ -3,21 +3,30 @@
 An MCP (Model Context Protocol) server that provides geocoding capabilities using the [OpenCage geocoding API](https://opencagedata.com/api).
 This server allows you to convert between addresses and geographic coordinates.
 
+
+**PLEASE NOTE:** the examples shown here are based on an integration with [claude.ai](https://claude.ai/)'s desktop client. MCP as a concept is supported by other services, but may require a slightly different configuration. 
+
 ## Features
 
 - **Forward Geocoding**: Convert addresses or place names to coordinates (latitude/longitude)
 - **Reverse Geocoding**: Convert coordinates to addresses
-- **API Status Monitoring**: Check your API usage and rate limits
-- **Flexible Parameters**: Support for language preferences, country restrictions, and result limits
+- **API Status Monitoring**: Check your API usage and rate limits (assuming your penCage account has hard limits).
 
 ## Prerequisites
 
 1. **Node.js** (version 20 or higher)
-2. **OpenCage API Key**: Sign up on [the OpenCage website](https://opencagedata.com/) to get a free-trial geocoding API key
+2. **OpenCage geocoding API Key**: Sign up on [the OpenCage website](https://opencagedata.com/) to get a free-trial geocoding API key
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the repository. Change into the repository directory
+
+```bash
+
+git clone git@github.com:OpenCageData/opencage-geocoding-mcp.git
+
+cd opencage-geocoding-mcp
+```
 
 2. Install dependencies:
 
@@ -28,7 +37,7 @@ npm install
 3. Set your OpenCage geocoding API key as an environment variable:
 
 ```bash
-export OPENCAGE_API_KEY="your_api_key_here"
+export OPENCAGE_API_KEY="your_opencage_geocoding_api_key_here"
 ```
 
 4. Build the project:
@@ -39,20 +48,11 @@ npm run build
 
 ## Usage
 
-### Testing the Server
-
-You can test the server directly:
-
-```bash
-npm run dev
-```
-
-### Using with Claude Desktop
+### Using within Claude Desktop
 
 Add this configuration to your Claude Desktop config file 
 
-On a Mac this will be (`~/Library/Application Support/Claude/claude_desktop_config.json`)
-but you can also navigate to the file via the menu: Settings > Developer > Edit Config
+On a Mac the config file should be (`~/Library/Application Support/Claude/claude_desktop_config.json`), but you can also navigate to the file via the menu: `Settings > Developer > Edit Config`
 
 ```json
 {
@@ -68,12 +68,13 @@ but you can also navigate to the file via the menu: Settings > Developer > Edit 
 }
 ```
 
+
+## Available Tools
+
 Note: the first time you run a command you will need to give Claude permission 
 
 ![Allow external integration](allow-external-integration.png)
 
-
-## Available Tools
 
 ### 1. geocode-forward
 
