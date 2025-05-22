@@ -33,13 +33,17 @@ const server = new Server({
 
 // Helper function for making OpenCage API requests
 async function makeOpenCageRequest(endpoint: string, params: Record<string, string>): Promise<any> {
-  const url = new URL(endpoint, OPENCAGE_API_BASE);
-  url.searchParams.append("key", API_KEY!); // Use non-null assertion since we check above
+  // Build the full URL properly
+  const fullUrl = `${OPENCAGE_API_BASE}/${endpoint}`;
+  const url = new URL(fullUrl);
+  url.searchParams.append("key", API_KEY!);
   
   Object.entries(params).forEach(([key, value]) => {
     url.searchParams.append(key, value);
   });
 
+  console.error(`Making request to: ${url.toString()}`); // Debug log
+  
   try {
     const response = await fetch(url.toString());
     if (!response.ok) {
@@ -148,7 +152,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       if (bounds) params.bounds = bounds;
       if (limit) params.limit = limit.toString();
 
-      const response = await makeOpenCageRequest("/json", params);
+      const response = await makeOpenCageRequest("json", params);
       
       if (response.results && response.results.length > 0) {
         const results = response.results.map((result: any) => ({
@@ -205,7 +209,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       if (language) params.language = language;
       if (no_annotations) params.no_annotations = "1";
 
-      const response = await makeOpenCageRequest("/json", params);
+      const response = await makeOpenCageRequest("json", params);
       
       if (response.results && response.results.length > 0) {
         const result = response.results[0];
@@ -253,7 +257,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   if (name === "get-api-status") {
     try {
       // Make a minimal request to get rate limit headers
-      const response = await fetch(`${OPENCAGE_API_BASE}/json?key=${API_KEY}&q=0,0&limit=1`);
+      const testUrl = `${OPENCAGE_API_BASE}/json?key=${API_KEY}&q=0,0&limit=1`;
+      console.error(`Testing API with URL: ${testUrl}`); // Debug log
+      const response = await fetch(testUrl);
       
       const headers = response.headers;
       const remaining = headers.get('x-ratelimit-remaining');
