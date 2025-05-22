@@ -103,7 +103,7 @@ Result: "1600 Pennsylvania Avenue NW, Washington, DC 20500, United States of Ame
 
 ### 3. get-api-status
 Check your current API usage and rate limits. 
-**NOTE**: only free-trial accounts have usage limits. See [relevant documentation](https://opencagedata.com/api#rate-limiting).
+**NOTE**: subscription customers do NOT have hard usage limits. See [relevant documentation](https://opencagedata.com/api#rate-limiting).
 
 **Parameters:** None
 
