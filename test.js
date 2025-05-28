@@ -25,7 +25,7 @@ async function testOpenCageAPI() {
     if (forwardData.results && forwardData.results.length > 0) {
       console.log('✅ Forward geocoding test passed');
       console.log(
-        `   London coordinates: ${forwardData.results[0].geometry.lat}, ${forwardData.results[0].geometry.lng}`
+        `   London coordinates: ${forwardData.results[0].geometry.lat}, ${forwardData.results[0].geometry.lng}`,
       );
     } else {
       console.log('❌ Forward geocoding test failed');

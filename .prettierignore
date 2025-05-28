@@ -1,0 +1,14 @@
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+# Other
+.vscode/
+# Ignore all node_modules directories
+node_modules/
+# Ignore all dist directories
+dist/
+# Ignore all build directories
+build/
+# Ignore all coverage directories
+coverage/
