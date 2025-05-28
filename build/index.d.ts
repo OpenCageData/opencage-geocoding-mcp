@@ -9,7 +9,7 @@ export interface OpenCageResponse {
                 name: string;
                 iso_code: string;
             };
-            [key: string]: any;
+            [key: string]: string | number | boolean | object | undefined;
         };
         components: {
             country: string;
@@ -20,7 +20,7 @@ export interface OpenCageResponse {
             road?: string;
             house_number?: string;
             postcode?: string;
-            [key: string]: any;
+            [key: string]: string | number | boolean | object | undefined;
         };
         confidence: number;
         formatted: string;
@@ -43,19 +43,21 @@ export declare class OpenCageServer {
     constructor();
     /**
      * Handles the geocoding request.
+     *
      * @param args - The arguments for the request.
      * @returns The response containing the geocoded location information.
      */
     private handleGeocode;
     /**
      * Handles the reverse geocoding request.
+     *
      * @param args - The arguments for the request.
      * @returns The response containing the address and location information.
      */
     private handleReverseGeocode;
     /**
      * Handles the OpenCage API info request.
-     * @param args - The arguments for the request.
+     * @param _args - The arguments for the request.
      * @returns The response containing API usage and rate limit information.
      */
     private handleOpenCageInfo;

@@ -33,7 +33,7 @@ export interface OpenCageResponse {
         name: string;
         iso_code: string;
       };
-      [key: string]: any;
+      [key: string]: string | number | boolean | object | undefined;
     };
     components: {
       country: string;
@@ -44,7 +44,7 @@ export interface OpenCageResponse {
       road?: string;
       house_number?: string;
       postcode?: string;
-      [key: string]: any;
+      [key: string]: string | number | boolean | object | undefined;
     };
     confidence: number;
     formatted: string;
@@ -78,7 +78,7 @@ export class OpenCageServer {
           tools: {},
           prompts: {},
         },
-      }
+      },
     );
 
     this.setupToolHandlers();
@@ -86,9 +86,11 @@ export class OpenCageServer {
 
   /**
    * Handles the geocoding request.
+   *
    * @param args - The arguments for the request.
    * @returns The response containing the geocoded location information.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async handleGeocode(args: any) {
     const {
       query,
@@ -153,12 +155,12 @@ export class OpenCageServer {
                 data.total_results
               } result(s) for "${query}"::\n\n${results
                 .map(
-                  (r: any, i: number) =>
+                  (r, i: number) =>
                     `${i + 1}. ${r.formatted}\n` +
                     `   Coordinates: ${r.latitude}, ${r.longitude}\n` +
                     `   Flag: ${r.flag}\n` +
                     `   Timezone: ${r.timezone.name}\n` +
-                    `   Currency: ${r.currency.name} (${r.currency.iso_code})`
+                    `   Currency: ${r.currency.name} (${r.currency.iso_code})`,
                 )
                 .join('\n\n')}` +
               `\n\nFull API response:\n${JSON.stringify(data, null, 2)}`,
@@ -182,9 +184,11 @@ export class OpenCageServer {
 
   /**
    * Handles the reverse geocoding request.
+   *
    * @param args - The arguments for the request.
    * @returns The response containing the address and location information.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async handleReverseGeocode(args: any) {
     const { latitude, longitude, language = 'en', no_annotations } = args;
 
@@ -246,10 +250,11 @@ export class OpenCageServer {
 
   /**
    * Handles the OpenCage API info request.
-   * @param args - The arguments for the request.
+   * @param _args - The arguments for the request.
    * @returns The response containing API usage and rate limit information.
    */
-  private async handleOpenCageInfo(args: any) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+  private async handleOpenCageInfo(_args: any) {
     try {
       const params = new URLSearchParams({
         q: `0,0`,
@@ -486,6 +491,7 @@ What would you like to help me with regarding geocoding?`,
 
 // Start the server
 const server = new OpenCageServer();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 server.run().catch((error: any) => {
   console.error('Fatal error in main():', error);
   process.exit(1);

@@ -35,9 +35,11 @@ export class OpenCageServer {
     }
     /**
      * Handles the geocoding request.
+     *
      * @param args - The arguments for the request.
      * @returns The response containing the geocoded location information.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async handleGeocode(args) {
         const { query, language = 'en', countrycode, bounds, limit = 5, } = args || {};
         try {
@@ -110,9 +112,11 @@ export class OpenCageServer {
     }
     /**
      * Handles the reverse geocoding request.
+     *
      * @param args - The arguments for the request.
      * @returns The response containing the address and location information.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async handleReverseGeocode(args) {
         const { latitude, longitude, language = 'en', no_annotations } = args;
         const params = new URLSearchParams({
@@ -165,10 +169,11 @@ export class OpenCageServer {
     }
     /**
      * Handles the OpenCage API info request.
-     * @param args - The arguments for the request.
+     * @param _args - The arguments for the request.
      * @returns The response containing API usage and rate limit information.
      */
-    async handleOpenCageInfo(args) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    async handleOpenCageInfo(_args) {
         try {
             const params = new URLSearchParams({
                 q: `0,0`,
@@ -381,6 +386,7 @@ What would you like to help me with regarding geocoding?`,
 }
 // Start the server
 const server = new OpenCageServer();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 server.run().catch((error) => {
     console.error('Fatal error in main():', error);
     process.exit(1);
