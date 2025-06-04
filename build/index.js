@@ -56,7 +56,8 @@ export class OpenCageServer {
             if (bounds) {
                 params.append('bounds', bounds);
             }
-            const response = await fetch(`${OPENCAGE_API_URL}?${params}`);
+            const url = `${OPENCAGE_API_URL}?${params}`;
+            const response = await fetch(url, { headers: HEADERS });
             const data = await response.json();
             if (data.status.code !== 200) {
                 throw new Error(`OpenCage API error: ${data.status.message}`);
@@ -93,7 +94,7 @@ export class OpenCageServer {
                             `   Timezone: ${r.timezone.name}\n` +
                             `   Currency: ${r.currency.name} (${r.currency.iso_code})`)
                             .join('\n\n')}` +
-                            `\n\nFull API response:\n${JSON.stringify(data, null, 2)}`,
+                            `\n\nLink to the full API response:\n${url}\nCopy/paste this link to view the full response.`,
                     },
                 ],
             };
@@ -128,7 +129,8 @@ export class OpenCageServer {
         if (no_annotations) {
             params.append('no_annotations', '1');
         }
-        const response = await fetch(`${OPENCAGE_API_URL}?${params}`);
+        const url = `${OPENCAGE_API_URL}?${params}`;
+        const response = await fetch(url);
         const data = await response.json();
         if (data.status.code !== 200) {
             throw new Error(`OpenCage API error: ${data.status.message}`);
@@ -162,7 +164,7 @@ export class OpenCageServer {
                         `Flag: ${info.flag}\n` +
                         `Timezone: ${info.timezone.name}\n` +
                         `Currency: ${info.currency.name} (${info.currency.iso_code})\n` +
-                        `\nFull API response: ${JSON.stringify(data, null, 2)}`,
+                        `\n\nLink to the full API response:\n${url}\nCopy/paste this link to view the full response.`,
                 },
             ],
         };
