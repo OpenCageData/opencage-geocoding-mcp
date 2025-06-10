@@ -94,11 +94,18 @@ Convert an address or place name to coordinates and information about that locat
 - `limit` (optional): Max results (1-100, default 10)
 - `no_annotations` (optional): Exclude location annotations
 
-**Example:**
+**Example prompts**
 
 ```
-Query: "1600 Pennsylvania Avenue, Washington, DC"
-Result: JSON with coordinates, formatted address, confidence score, address components, annotations
+Prompt: "What are the coordinates of Trafalgar Square, London?"
+Result: coordinates, timezone, local currency, etc
+
+Prompt: "Where is Les Vans, France? Which Department is it in?"
+Result: coordinates, and correct answer that Les Vans is in the Ardèche department
+
+Prompt: "In welchem Bundesland liegt Weimar?"
+Result: coordinates, and correct answer that Weimar is in Thüringen
+
 ```
 
 ### 2. geocode-reverse
@@ -112,11 +119,15 @@ Convert coordinates to an address and information about that location
 - `language` (optional): Language for results
 - `no_annotations` (optional): Exclude location annotations
 
-**Example:**
+**Example prompts**
 
 ```
-Input: 38.8976, -77.0365
+Prompt: "what is the address at 38.8976, -77.0365?"
 Result: "1600 Pennsylvania Avenue NW, Washington, DC 20500, United States of America"
+
+Prompt: "Which province are the coordinates 41.38700, 2.16995 in?"
+Result: "Coordinates are in Barcelona in the province of Catalonia"
+
 ```
 
 ### 3. get-opencage-info
@@ -159,6 +170,8 @@ The server includes comprehensive error handling:
 
 - [OpenCage homepage](https://opencagedata.com/) - Get your geocoding API key
 - [OpenCage API Documentation](https://opencagedata.com/api) - Full OpenCage geocoding API reference
+- [OpenCage MCP tutorial](https://opencagedata.com/tutorials/geocode-inside-an-llm-via-mcp)
+
 - [Model Context Protocol](https://modelcontextprotocol.io/) - Learn more about MCP
 
 ### Who is OpenCage GmbH?
