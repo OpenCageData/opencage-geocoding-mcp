@@ -164,7 +164,7 @@ export class OpenCageServer {
                     `   Currency: ${r.currency.name} (${r.currency.iso_code})`,
                 )
                 .join('\n\n')}` +
-              `\n\nLink to the full API response:\n${url}\nCopy/paste this link to view the full response.`,
+              `\n\nThe full API response:\n${JSON.stringify(data, null, 2)}`,
           },
         ],
       };
@@ -245,7 +245,7 @@ export class OpenCageServer {
             `Flag: ${info.flag}\n` +
             `Timezone: ${info.timezone.name}\n` +
             `Currency: ${info.currency.name} (${info.currency.iso_code})\n` +
-            `\n\nLink to the full API response:\n${url}\nCopy/paste this link to view the full response.`,
+            `\n\nThe full API response:\n${JSON.stringify(data, null, 2)}`,
         },
       ],
     };
