@@ -1,6 +1,6 @@
 {
-  "name": "mcp-opencage-server",
-  "version": "1.0.0",
+  "name": "@opencage/mcp-opencage-server",
+  "version": "1.0.1",
   "description": "MCP server for OpenCage geocoding API",
   "author": {
     "name": "OpenCage GmbH",
