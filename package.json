@@ -1,6 +1,6 @@
 {
   "name": "@opencage/mcp-opencage-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP server for OpenCage geocoding API",
   "author": {
     "name": "OpenCage GmbH",
@@ -16,6 +16,7 @@
   "bin": {
     "opencage-mcp-server": "build/index.js"
   },
+  "mcpName": "io.github.OpenCageData/opencage-geocoding-mcp",
   "scripts": {
     "build": "tsc",
     "check-types": "tsc --noEmit",

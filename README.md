@@ -37,9 +37,8 @@ npm install
 
 This is enough to get the MCP working with Claude Desktop (see below)
 
-If you want to develop the MCP and plan to query the MCP from the command line 
+If you want to develop the MCP and plan to query the MCP from the command line
 you will also need to:
-
 
 3. Set your OpenCage geocoding API key as an environment variable:
 
