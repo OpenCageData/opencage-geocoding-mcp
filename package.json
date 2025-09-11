@@ -14,7 +14,7 @@
   "main": "build/index.js",
   "type": "module",
   "bin": {
-    "opencage-mcp-server": "./build/index.js"
+    "opencage-mcp-server": "build/index.js"
   },
   "scripts": {
     "build": "tsc",
