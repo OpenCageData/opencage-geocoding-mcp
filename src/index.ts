@@ -193,62 +193,76 @@ export class OpenCageServer {
   private async handleReverseGeocode(args: any) {
     const { latitude, longitude, language = 'en', no_annotations } = args;
 
-    const params = new URLSearchParams({
-      q: `${latitude},${longitude}`,
-      key: OPENCAGE_API_KEY!,
-      language,
-      limit: '1',
-    });
+    try {
+      const params = new URLSearchParams({
+        q: `${latitude},${longitude}`,
+        key: OPENCAGE_API_KEY!,
+        language,
+        limit: '1',
+      });
 
-    if (no_annotations) {
-      params.append('no_annotations', '1');
-    }
+      if (no_annotations) {
+        params.append('no_annotations', '1');
+      }
 
-    const url = `${OPENCAGE_API_URL}?${params}`;
+      const url = `${OPENCAGE_API_URL}?${params}`;
 
-    const response = await fetch(url);
-    const data: OpenCageResponse = await response.json();
+      const response = await fetch(url, { headers: HEADERS });
+      const data: OpenCageResponse = await response.json();
 
-    if (data.status.code !== 200) {
-      throw new Error(`OpenCage API error: ${data.status.message}`);
-    }
+      if (data.status.code !== 200) {
+        throw new Error(`OpenCage API error: ${data.status.message}`);
+      }
 
-    if (data.total_results === 0) {
+      if (data.total_results === 0) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `No address found for coordinates ${latitude}, ${longitude}`,
+            },
+          ],
+        };
+      }
+
+      const result = data.results[0];
+      const info = {
+        formatted: result.formatted,
+        components: result.components,
+        flag: result.annotations?.flag,
+        timezone: result.annotations?.timezone,
+        currency: result.annotations?.currency,
+        ...(result.annotations &&
+          !no_annotations && { annotations: result.annotations }),
+      };
+
       return {
         content: [
           {
             type: 'text',
-            text: `No address found for coordinates ${latitude}, ${longitude}`,
+            text:
+              `Reverse geocoding for coordinates ${latitude}, ${longitude}:\n\n` +
+              `Address: ${info.formatted}\n` +
+              `Flag: ${info.flag}\n` +
+              `Timezone: ${info.timezone.name}\n` +
+              `Currency: ${info.currency.name} (${info.currency.iso_code})\n` +
+              `\n\nThe full API response:\n${JSON.stringify(data, null, 2)}`,
           },
         ],
       };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error reverse geocoding coordinates ${latitude}, ${longitude}: ${
+              error instanceof Error ? error.message : 'Unknown error'
+            }`,
+          },
+        ],
+        isError: true,
+      };
     }
-
-    const result = data.results[0];
-    const info = {
-      formatted: result.formatted,
-      components: result.components,
-      flag: result.annotations?.flag,
-      timezone: result.annotations?.timezone,
-      currency: result.annotations?.currency,
-      ...(result.annotations &&
-        !no_annotations && { annotations: result.annotations }),
-    };
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text:
-            `Reverse geocoding for coordinates ${latitude}, ${longitude}:\n\n` +
-            `Address: ${info.formatted}\n` +
-            `Flag: ${info.flag}\n` +
-            `Timezone: ${info.timezone.name}\n` +
-            `Currency: ${info.currency.name} (${info.currency.iso_code})\n` +
-            `\n\nThe full API response:\n${JSON.stringify(data, null, 2)}`,
-        },
-      ],
-    };
   }
 
   /**
