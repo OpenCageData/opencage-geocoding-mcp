@@ -24,7 +24,7 @@ This server allows you to convert between addresses and geographic coordinates.
 
    If however, you want to process larger volumes of data, for example CSV files full of address or coordinates, or connecting to database full of data, it is almost certainly both faster and more affordable to use [our command line tools](https://opencagedata.com/tutorials/geocode-commandline), or have the LLM write a script to call our API directly.
 
-  We offer a markdown-formatted [opencage-geocoding-api SKILL](https://github.com/OpenCageData/opencage-skills/blob/master/opencage-geocoding-api/SKILL.md) file to train your AI on best practices for working with our geocoding API.
+   We offer a markdown-formatted [opencage-geocoding-api SKILL](https://github.com/OpenCageData/opencage-skills/blob/master/opencage-geocoding-api/SKILL.md) file to train your AI on best practices for working with our geocoding API.
 
 1. Clone the repository. Change into the repository directory
 
